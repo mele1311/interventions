@@ -9,8 +9,7 @@ import { toast } from "sonner";
 import { Shield } from "lucide-react";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
+  const [username, setUsername] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
 
