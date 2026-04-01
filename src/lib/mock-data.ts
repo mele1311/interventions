@@ -20,11 +20,11 @@ export interface Intervention {
 }
 
 export const mockUsers: User[] = [
-  { id: "1", full_name: "Admin Principal", email: "admin@interventions.com", role: "admin", created_at: "2024-01-10" },
-  { id: "2", full_name: "Jean Dupont", email: "jean@example.com", role: "user", created_at: "2024-02-15" },
-  { id: "3", full_name: "Marie Curie", email: "marie@example.com", role: "user", created_at: "2024-03-20" },
-  { id: "4", full_name: "Pierre Martin", email: "pierre@example.com", role: "user", created_at: "2024-04-05" },
-  { id: "5", full_name: "Sophie Bernard", email: "sophie@example.com", role: "user", created_at: "2024-05-12" },
+  { id: "1", username: "admin", full_name: "Admin Principal", email: "admin@interventions.com", role: "admin", created_at: "2024-01-10" },
+  { id: "2", username: "jean.dupont", full_name: "Jean Dupont", email: "jean@example.com", role: "user", created_at: "2024-02-15" },
+  { id: "3", username: "marie.curie", full_name: "Marie Curie", email: "marie@example.com", role: "user", created_at: "2024-03-20" },
+  { id: "4", username: "pierre.martin", full_name: "Pierre Martin", email: "pierre@example.com", role: "user", created_at: "2024-04-05" },
+  { id: "5", username: "sophie.bernard", full_name: "Sophie Bernard", email: "sophie@example.com", role: "user", created_at: "2024-05-12" },
 ];
 
 export const mockInterventions: Intervention[] = [
