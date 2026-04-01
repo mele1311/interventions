@@ -1,10 +1,11 @@
 import React, { createContext, useContext, useState, useCallback } from "react";
-import { User, mockUsers } from "./mock-data";
+import { User } from "./mock-data";
 
 interface AuthContextType {
   user: User | null;
   login: (username: string, password: string) => boolean;
   logout: () => void;
+  setUser: React.Dispatch<React.SetStateAction<User | null>>;
 }
 
 const AuthContext = createContext<AuthContextType | null>(null);
@@ -15,13 +16,10 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return saved ? JSON.parse(saved) : null;
   });
 
-  const login = useCallback((username: string, _password: string) => {
-    const found = mockUsers.find((u) => u.username === username);
-    if (found) {
-      setUser(found);
-      localStorage.setItem("auth_user", JSON.stringify(found));
-      return true;
-    }
+  const login = useCallback((username: string, password: string) => {
+    // TODO: Remplacez par un appel API vers votre backend PHP/MySQL
+    // Exemple: fetch('/api/login', { method: 'POST', body: JSON.stringify({ username, password }) })
+    console.warn("Login non implémenté — connectez votre API backend ici");
     return false;
   }, []);
 
@@ -31,7 +29,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   }, []);
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ user, login, logout, setUser }}>
       {children}
     </AuthContext.Provider>
   );

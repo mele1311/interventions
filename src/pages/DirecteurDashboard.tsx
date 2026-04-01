@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { mockInterventions, Intervention } from "@/lib/mock-data";
+import { Intervention } from "@/lib/mock-data";
 import Navbar from "@/components/Navbar";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -8,7 +8,8 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileText, CheckCircle, AlertCircle } from "lucide-react";
 
 const DirecteurDashboard = () => {
-  const [interventions] = useState<Intervention[]>(mockInterventions);
+  // TODO: Remplacez par un appel API pour charger toutes les interventions
+  const [interventions] = useState<Intervention[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterSolved, setFilterSolved] = useState<string>("all");
 

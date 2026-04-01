@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { mockInterventions, mockUsers, User, Intervention } from "@/lib/mock-data";
+import { User, Intervention } from "@/lib/mock-data";
 import Navbar from "@/components/Navbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -9,8 +9,9 @@ import UserManagement from "@/components/UserManagement";
 import { Users, FileText, CheckCircle, AlertCircle } from "lucide-react";
 
 const AdminDashboard = () => {
-  const [interventions] = useState<Intervention[]>(mockInterventions);
-  const [users, setUsers] = useState<User[]>(mockUsers.filter((u) => u.role === "user"));
+  // TODO: Remplacez par des appels API vers votre backend
+  const [interventions] = useState<Intervention[]>([]);
+  const [users, setUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterSolved, setFilterSolved] = useState<string>("all");
 
@@ -47,7 +48,6 @@ const AdminDashboard = () => {
           <p className="text-muted-foreground">Gérez les utilisateurs et les interventions</p>
         </div>
 
-        {/* Stats */}
         <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
           {stats.map((stat) => (
             <Card key={stat.label}>
@@ -62,7 +62,6 @@ const AdminDashboard = () => {
           ))}
         </div>
 
-        {/* Interventions */}
         <div className="space-y-4">
           <h2 className="text-lg font-semibold text-foreground">Toutes les Interventions</h2>
           <div className="flex flex-col sm:flex-row gap-3">
@@ -86,7 +85,6 @@ const AdminDashboard = () => {
           <InterventionsTable interventions={filteredInterventions} showUser />
         </div>
 
-        {/* User Management */}
         <UserManagement users={users} setUsers={setUsers} />
       </main>
     </div>
