@@ -16,7 +16,7 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
   });
 
   const login = useCallback((email: string, _password: string) => {
-    const found = mockUsers.find((u) => u.email === email);
+    const found = mockUsers.find((u) => u.username === username);
     if (found) {
       setUser(found);
       localStorage.setItem("auth_user", JSON.stringify(found));
