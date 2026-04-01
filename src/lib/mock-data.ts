@@ -25,6 +25,7 @@ export const mockUsers: User[] = [
   { id: "3", username: "marie.curie", full_name: "Marie Curie", email: "marie@example.com", role: "user", created_at: "2024-03-20" },
   { id: "4", username: "pierre.martin", full_name: "Pierre Martin", email: "pierre@example.com", role: "user", created_at: "2024-04-05" },
   { id: "5", username: "sophie.bernard", full_name: "Sophie Bernard", email: "sophie@example.com", role: "user", created_at: "2024-05-12" },
+  { id: "6", username: "directeur", full_name: "Directeur Général", email: "directeur@interventions.com", role: "directeur", created_at: "2024-01-05" },
 ];
 
 export const mockInterventions: Intervention[] = [
