@@ -3,7 +3,7 @@ import { User, mockUsers } from "./mock-data";
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => boolean;
+  login: (username: string, password: string) => boolean;
   logout: () => void;
 }
 
@@ -15,8 +15,8 @@ export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children
     return saved ? JSON.parse(saved) : null;
   });
 
-  const login = useCallback((email: string, _password: string) => {
-    const found = mockUsers.find((u) => u.email === email);
+  const login = useCallback((username: string, _password: string) => {
+    const found = mockUsers.find((u) => u.username === username);
     if (found) {
       setUser(found);
       localStorage.setItem("auth_user", JSON.stringify(found));

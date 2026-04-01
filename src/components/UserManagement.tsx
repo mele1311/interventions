@@ -47,6 +47,7 @@ const UserManagement = ({ users, setUsers }: Props) => {
     } else {
       const newUser: User = {
         id: String(Date.now()),
+        username: formEmail.split("@")[0].replace(/\s/g, ".").toLowerCase(),
         full_name: formName,
         email: formEmail,
         role: "user",

@@ -9,23 +9,23 @@ import { toast } from "sonner";
 import { Shield } from "lucide-react";
 
 const Login = () => {
-  const [email, setEmail] = useState("");
+  const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
   const { login } = useAuth();
   const navigate = useNavigate();
 
   const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email || !password) {
+    if (!username || !password) {
       toast.error("Veuillez remplir tous les champs");
       return;
     }
-    const success = login(email, password);
+    const success = login(username, password);
     if (success) {
       toast.success("Connexion réussie !");
       navigate("/dashboard");
     } else {
-      toast.error("Identifiants invalides. Essayez: admin@interventions.com ou jean@example.com");
+      toast.error("Identifiants invalides. Essayez: admin ou jean.dupont");
     }
   };
 
@@ -42,13 +42,13 @@ const Login = () => {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Adresse e-mail</Label>
+              <Label htmlFor="username">Nom d'utilisateur</Label>
               <Input
-                id="email"
-                type="email"
-                placeholder="nom@exemple.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
+                id="username"
+                type="text"
+                placeholder="Votre nom d'utilisateur"
+                value={username}
+                onChange={(e) => setUsername(e.target.value)}
               />
             </div>
             <div className="space-y-2">
@@ -67,8 +67,8 @@ const Login = () => {
           </form>
           <div className="mt-6 rounded-lg bg-muted p-3 text-sm text-muted-foreground">
             <p className="font-medium mb-1">Comptes de test :</p>
-            <p>Admin : admin@interventions.com</p>
-            <p>Utilisateur : jean@example.com</p>
+            <p>Admin : <span className="font-mono">admin</span></p>
+            <p>Utilisateur : <span className="font-mono">jean.dupont</span></p>
             <p className="text-xs mt-1">(n'importe quel mot de passe)</p>
           </div>
         </CardContent>
