@@ -25,7 +25,7 @@ const Login = () => {
       toast.success("Connexion réussie !");
       navigate("/dashboard");
     } else {
-      toast.error("Identifiants invalides. Essayez: admin ou jean.dupont");
+      toast.error("Identifiants invalides");
     }
   };
 
@@ -65,13 +65,6 @@ const Login = () => {
               Se connecter
             </Button>
           </form>
-          <div className="mt-6 rounded-lg bg-muted p-3 text-sm text-muted-foreground">
-            <p className="font-medium mb-1">Comptes de test :</p>
-            <p>Admin : <span className="font-mono">admin</span></p>
-            <p>Directeur : <span className="font-mono">directeur</span></p>
-            <p>Utilisateur : <span className="font-mono">jean.dupont</span></p>
-            <p className="text-xs mt-1">(n'importe quel mot de passe)</p>
-          </div>
         </CardContent>
       </Card>
     </div>

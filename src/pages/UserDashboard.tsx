@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { Intervention, mockInterventions } from "@/lib/mock-data";
+import { Intervention } from "@/lib/mock-data";
 import { useAuth } from "@/lib/auth-context";
 import Navbar from "@/components/Navbar";
 import InterventionForm from "@/components/InterventionForm";
@@ -7,9 +7,8 @@ import InterventionsTable from "@/components/InterventionsTable";
 
 const UserDashboard = () => {
   const { user } = useAuth();
-  const [interventions, setInterventions] = useState<Intervention[]>(
-    mockInterventions.filter((i) => i.user_id === user?.id)
-  );
+  // TODO: Remplacez par un appel API pour charger les interventions de l'utilisateur
+  const [interventions, setInterventions] = useState<Intervention[]>([]);
 
   const handleAdd = (intervention: Omit<Intervention, "id" | "user_id" | "created_at">) => {
     const newIntervention: Intervention = {
