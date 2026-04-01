@@ -3,7 +3,7 @@ import { User, mockUsers } from "./mock-data";
 
 interface AuthContextType {
   user: User | null;
-  login: (email: string, password: string) => boolean;
+  login: (username: string, password: string) => boolean;
   logout: () => void;
 }
 
