@@ -5,6 +5,30 @@ const pool = require("../config/db");
 
 const router = express.Router();
 
+const normalizeStoredHash = (value = "") => value.replace(/^\$2y\$/, "$2a$");
+const isBcryptHash = (value = "") => /^\$2[aby]\$\d{2}\$/.test(value);
+
+const verifyPassword = async (plainPassword, storedPassword) => {
+  if (typeof storedPassword !== "string" || !storedPassword) {
+    return { valid: false, needsRehash: false };
+  }
+
+  const normalizedHash = normalizeStoredHash(storedPassword);
+
+  if (isBcryptHash(normalizedHash)) {
+    const valid = await bcrypt.compare(plainPassword, normalizedHash);
+    return {
+      valid,
+      needsRehash: valid && normalizedHash !== storedPassword,
+    };
+  }
+
+  return {
+    valid: plainPassword === storedPassword,
+    needsRehash: plainPassword === storedPassword,
+  };
+};
+
 // POST /api/auth/login
 router.post("/login", async (req, res) => {
   try {
@@ -22,9 +46,21 @@ router.post("/login", async (req, res) => {
     }
 
     const user = rows[0];
-    const valid = await bcrypt.compare(password, user.password);
+    const { valid, needsRehash } = await verifyPassword(password, user.password);
     if (!valid) {
       return res.status(401).json({ error: "Identifiants invalides" });
+    }
+
+    if (needsRehash) {
+      try {
+        const hashedPassword = await bcrypt.hash(password, 10);
+        await pool.execute("UPDATE users SET password = ? WHERE id = ?", [
+          hashedPassword,
+          user.id,
+        ]);
+      } catch (rehashError) {
+        console.warn("Impossible de mettre à jour le hash du mot de passe:", rehashError);
+      }
     }
 
     const token = jwt.sign(
