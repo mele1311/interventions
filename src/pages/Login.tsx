@@ -11,21 +11,29 @@ import { Shield } from "lucide-react";
 const Login = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
+  const [loading, setLoading] = useState(false);
   const { login } = useAuth();
   const navigate = useNavigate();
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!username || !password) {
       toast.error("Veuillez remplir tous les champs");
       return;
     }
-    const success = login(username, password);
-    if (success) {
-      toast.success("Connexion réussie !");
-      navigate("/dashboard");
-    } else {
-      toast.error("Identifiants invalides");
+    setLoading(true);
+    try {
+      const success = await login(username, password);
+      if (success) {
+        toast.success("Connexion réussie !");
+        navigate("/dashboard");
+      } else {
+        toast.error("Identifiants invalides");
+      }
+    } catch {
+      toast.error("Erreur de connexion au serveur");
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -61,8 +69,8 @@ const Login = () => {
                 onChange={(e) => setPassword(e.target.value)}
               />
             </div>
-            <Button type="submit" className="w-full">
-              Se connecter
+            <Button type="submit" className="w-full" disabled={loading}>
+              {loading ? "Connexion..." : "Se connecter"}
             </Button>
           </form>
         </CardContent>
