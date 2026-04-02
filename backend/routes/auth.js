@@ -46,7 +46,9 @@ router.post("/login", async (req, res) => {
     }
 
     const user = rows[0];
+    console.log("User found:", user.username, "| Password column length:", (user.password || "").length, "| isBcrypt:", isBcryptHash(normalizeStoredHash(user.password)));
     const { valid, needsRehash } = await verifyPassword(password, user.password);
+    console.log("Password check result:", { valid, needsRehash });
     if (!valid) {
       return res.status(401).json({ error: "Identifiants invalides" });
     }
