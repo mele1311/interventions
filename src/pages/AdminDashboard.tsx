@@ -100,7 +100,7 @@ const AdminDashboard = () => {
               </SelectContent>
             </Select>
           </div>
-          <InterventionsTable interventions={filteredInterventions} showUser />
+          <InterventionsTable interventions={filteredInterventions} showUser editable onUpdated={loadData} />
         </div>
 
         <UserManagement users={users} onUsersChange={loadData} />
