@@ -51,7 +51,7 @@ const UserDashboard = () => {
           {loading ? (
             <p className="text-muted-foreground">Chargement...</p>
           ) : (
-            <InterventionsTable interventions={interventions} />
+            <InterventionsTable interventions={interventions} editable onUpdated={loadInterventions} />
           )}
         </div>
       </main>

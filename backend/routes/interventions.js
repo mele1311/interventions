@@ -54,7 +54,7 @@ router.post("/", authenticateToken, requireRole("admin", "user"), async (req, re
 });
 
 // PUT /api/interventions/:id — Admin uniquement
-router.put("/:id", authenticateToken, requireRole("admin"), async (req, res) => {
+router.put("/:id", authenticateToken, requireRole("admin", "user"), async (req, res) => {
   try {
     const { full_name, problem_description, location, actions_taken, date_of_intervention, is_solved } = req.body;
     await pool.execute(
