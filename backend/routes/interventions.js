@@ -56,6 +56,14 @@ router.post("/", authenticateToken, requireRole("admin", "user"), async (req, re
 // PUT /api/interventions/:id — Admin uniquement
 router.put("/:id", authenticateToken, requireRole("admin", "user"), async (req, res) => {
   try {
+    // Users can only edit their own interventions
+    if (req.user.role === "user") {
+      const [rows] = await pool.execute("SELECT user_id FROM interventions WHERE id = ?", [req.params.id]);
+      if (rows.length === 0) return res.status(404).json({ error: "Intervention non trouvée" });
+      if (String(rows[0].user_id) !== String(req.user.id)) {
+        return res.status(403).json({ error: "Vous ne pouvez modifier que vos propres interventions" });
+      }
+    }
     const { full_name, problem_description, location, actions_taken, date_of_intervention, is_solved } = req.body;
     await pool.execute(
       `UPDATE interventions SET full_name=?, problem_description=?, location=?, actions_taken=?, date_of_intervention=?, is_solved=? WHERE id=?`,
