@@ -1,67 +1,71 @@
 import { useState } from "react";
 import { User } from "@/lib/mock-data";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { createUser, deleteUser } from "@/lib/api";
+import { Card, CardContent } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog";
 import { toast } from "sonner";
-import { Pencil, Trash2, UserPlus, Users } from "lucide-react";
+import { Trash2, UserPlus, Users } from "lucide-react";
 
 interface Props {
   users: User[];
-  setUsers: React.Dispatch<React.SetStateAction<User[]>>;
+  onUsersChange: () => void;
 }
 
-const UserManagement = ({ users, setUsers }: Props) => {
+const UserManagement = ({ users, onUsersChange }: Props) => {
   const [dialogOpen, setDialogOpen] = useState(false);
-  const [editingUser, setEditingUser] = useState<User | null>(null);
+  const [formUsername, setFormUsername] = useState("");
   const [formName, setFormName] = useState("");
   const [formEmail, setFormEmail] = useState("");
+  const [formPassword, setFormPassword] = useState("");
+  const [formRole, setFormRole] = useState<string>("user");
+  const [loading, setLoading] = useState(false);
 
   const openCreate = () => {
-    setEditingUser(null);
+    setFormUsername("");
     setFormName("");
     setFormEmail("");
+    setFormPassword("");
+    setFormRole("user");
     setDialogOpen(true);
   };
 
-  const openEdit = (user: User) => {
-    setEditingUser(user);
-    setFormName(user.full_name);
-    setFormEmail(user.email);
-    setDialogOpen(true);
-  };
-
-  const handleSave = () => {
-    if (!formName || !formEmail) {
+  const handleSave = async () => {
+    if (!formUsername || !formName || !formEmail || !formPassword || !formRole) {
       toast.error("Veuillez remplir tous les champs");
       return;
     }
-    if (editingUser) {
-      setUsers((prev) =>
-        prev.map((u) => (u.id === editingUser.id ? { ...u, full_name: formName, email: formEmail } : u))
-      );
-      toast.success("Utilisateur modifié avec succès");
-    } else {
-      const newUser: User = {
-        id: String(Date.now()),
-        username: formEmail.split("@")[0].replace(/\s/g, ".").toLowerCase(),
+    setLoading(true);
+    try {
+      await createUser({
+        username: formUsername,
         full_name: formName,
         email: formEmail,
-        role: "user",
-        created_at: new Date().toISOString().split("T")[0],
-      };
-      setUsers((prev) => [...prev, newUser]);
+        password: formPassword,
+        role: formRole,
+      });
       toast.success("Utilisateur créé avec succès");
+      setDialogOpen(false);
+      onUsersChange();
+    } catch (err: any) {
+      toast.error(err.message || "Erreur lors de la création");
+    } finally {
+      setLoading(false);
     }
-    setDialogOpen(false);
   };
 
-  const handleDelete = (id: string) => {
-    setUsers((prev) => prev.filter((u) => u.id !== id));
-    toast.success("Utilisateur supprimé");
+  const handleDelete = async (id: string) => {
+    try {
+      await deleteUser(id);
+      toast.success("Utilisateur supprimé");
+      onUsersChange();
+    } catch (err: any) {
+      toast.error(err.message || "Erreur lors de la suppression");
+    }
   };
 
   return (
@@ -80,9 +84,13 @@ const UserManagement = ({ users, setUsers }: Props) => {
           </DialogTrigger>
           <DialogContent>
             <DialogHeader>
-              <DialogTitle>{editingUser ? "Modifier l'utilisateur" : "Nouvel utilisateur"}</DialogTitle>
+              <DialogTitle>Nouvel utilisateur</DialogTitle>
             </DialogHeader>
             <div className="space-y-4 pt-2">
+              <div className="space-y-2">
+                <Label>Nom d'utilisateur</Label>
+                <Input value={formUsername} onChange={(e) => setFormUsername(e.target.value)} placeholder="nom.utilisateur" />
+              </div>
               <div className="space-y-2">
                 <Label>Nom complet</Label>
                 <Input value={formName} onChange={(e) => setFormName(e.target.value)} placeholder="Nom complet" />
@@ -91,8 +99,25 @@ const UserManagement = ({ users, setUsers }: Props) => {
                 <Label>E-mail</Label>
                 <Input type="email" value={formEmail} onChange={(e) => setFormEmail(e.target.value)} placeholder="email@exemple.com" />
               </div>
-              <Button onClick={handleSave} className="w-full">
-                {editingUser ? "Enregistrer" : "Créer"}
+              <div className="space-y-2">
+                <Label>Mot de passe</Label>
+                <Input type="password" value={formPassword} onChange={(e) => setFormPassword(e.target.value)} placeholder="Mot de passe" />
+              </div>
+              <div className="space-y-2">
+                <Label>Rôle</Label>
+                <Select value={formRole} onValueChange={setFormRole}>
+                  <SelectTrigger>
+                    <SelectValue />
+                  </SelectTrigger>
+                  <SelectContent>
+                    <SelectItem value="user">Utilisateur</SelectItem>
+                    <SelectItem value="directeur">Directeur</SelectItem>
+                    <SelectItem value="admin">Administrateur</SelectItem>
+                  </SelectContent>
+                </Select>
+              </div>
+              <Button onClick={handleSave} className="w-full" disabled={loading}>
+                {loading ? "Création..." : "Créer"}
               </Button>
             </div>
           </DialogContent>
@@ -104,22 +129,21 @@ const UserManagement = ({ users, setUsers }: Props) => {
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Nom</TableHead>
+                <TableHead>Nom d'utilisateur</TableHead>
+                <TableHead>Nom complet</TableHead>
                 <TableHead>E-mail</TableHead>
-                <TableHead>Date de création</TableHead>
+                <TableHead>Rôle</TableHead>
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {users.map((u) => (
                 <TableRow key={u.id}>
+                  <TableCell>{u.username}</TableCell>
                   <TableCell className="font-medium">{u.full_name}</TableCell>
                   <TableCell>{u.email}</TableCell>
-                  <TableCell>{u.created_at}</TableCell>
-                  <TableCell className="text-right space-x-1">
-                    <Button variant="ghost" size="icon" onClick={() => openEdit(u)}>
-                      <Pencil className="h-4 w-4" />
-                    </Button>
+                  <TableCell className="capitalize">{u.role}</TableCell>
+                  <TableCell className="text-right">
                     <Button variant="ghost" size="icon" onClick={() => handleDelete(u.id)}>
                       <Trash2 className="h-4 w-4 text-destructive" />
                     </Button>
