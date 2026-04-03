@@ -46,7 +46,6 @@ const InterventionForm = ({ onSubmit }: Props) => {
     setActionsTaken("");
     setDate(undefined);
     setIsSolved("");
-    toast.success("Intervention soumise avec succès !");
   };
 
   return (
