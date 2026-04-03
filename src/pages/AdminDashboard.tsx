@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { User, Intervention } from "@/lib/mock-data";
+import { fetchUsers, fetchInterventions } from "@/lib/api";
 import Navbar from "@/components/Navbar";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -7,13 +8,30 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@
 import InterventionsTable from "@/components/InterventionsTable";
 import UserManagement from "@/components/UserManagement";
 import { Users, FileText, CheckCircle, AlertCircle } from "lucide-react";
+import { toast } from "sonner";
 
 const AdminDashboard = () => {
-  // TODO: Remplacez par des appels API vers votre backend
-  const [interventions] = useState<Intervention[]>([]);
+  const [interventions, setInterventions] = useState<Intervention[]>([]);
   const [users, setUsers] = useState<User[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterSolved, setFilterSolved] = useState<string>("all");
+
+  const loadData = useCallback(async () => {
+    try {
+      const [usersData, interventionsData] = await Promise.all([
+        fetchUsers(),
+        fetchInterventions(),
+      ]);
+      setUsers(usersData);
+      setInterventions(interventionsData);
+    } catch (err: any) {
+      toast.error("Erreur lors du chargement des données");
+    }
+  }, []);
+
+  useEffect(() => {
+    loadData();
+  }, [loadData]);
 
   const totalUsers = users.length;
   const totalInterventions = interventions.length;
@@ -85,7 +103,7 @@ const AdminDashboard = () => {
           <InterventionsTable interventions={filteredInterventions} showUser />
         </div>
 
-        <UserManagement users={users} setUsers={setUsers} />
+        <UserManagement users={users} onUsersChange={loadData} />
       </main>
     </div>
   );

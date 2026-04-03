@@ -1,23 +1,40 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Intervention } from "@/lib/mock-data";
+import { fetchInterventions, createIntervention } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
 import Navbar from "@/components/Navbar";
 import InterventionForm from "@/components/InterventionForm";
 import InterventionsTable from "@/components/InterventionsTable";
+import { toast } from "sonner";
 
 const UserDashboard = () => {
   const { user } = useAuth();
-  // TODO: Remplacez par un appel API pour charger les interventions de l'utilisateur
   const [interventions, setInterventions] = useState<Intervention[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const handleAdd = (intervention: Omit<Intervention, "id" | "user_id" | "created_at">) => {
-    const newIntervention: Intervention = {
-      ...intervention,
-      id: String(Date.now()),
-      user_id: user!.id,
-      created_at: new Date().toISOString().split("T")[0],
-    };
-    setInterventions((prev) => [newIntervention, ...prev]);
+  const loadInterventions = useCallback(async () => {
+    try {
+      const data = await fetchInterventions();
+      setInterventions(data);
+    } catch (err: any) {
+      toast.error("Erreur lors du chargement des interventions");
+    } finally {
+      setLoading(false);
+    }
+  }, []);
+
+  useEffect(() => {
+    loadInterventions();
+  }, [loadInterventions]);
+
+  const handleAdd = async (intervention: Omit<Intervention, "id" | "user_id" | "created_at">) => {
+    try {
+      await createIntervention(intervention);
+      toast.success("Intervention soumise avec succès !");
+      loadInterventions();
+    } catch (err: any) {
+      toast.error(err.message || "Erreur lors de la soumission");
+    }
   };
 
   return (
@@ -31,7 +48,11 @@ const UserDashboard = () => {
         <InterventionForm onSubmit={handleAdd} />
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-4">Mes Interventions</h2>
-          <InterventionsTable interventions={interventions} />
+          {loading ? (
+            <p className="text-muted-foreground">Chargement...</p>
+          ) : (
+            <InterventionsTable interventions={interventions} />
+          )}
         </div>
       </main>
     </div>
