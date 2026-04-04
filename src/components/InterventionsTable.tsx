@@ -104,7 +104,7 @@ const InterventionsTable = ({ interventions, showUser, editable, onUpdated }: Pr
                     {showUser && <TableCell className="font-medium">{i.full_name}</TableCell>}
                     <TableCell className="max-w-[250px] truncate">{i.problem_description}</TableCell>
                     <TableCell>{i.location}</TableCell>
-                    <TableCell>{i.date_of_intervention}</TableCell>
+                    <TableCell>{new Date(i.date_of_intervention).toLocaleDateString("fr-FR")}</TableCell>
                     <TableCell>
                       <Badge variant={i.is_solved ? "default" : "destructive"} className={i.is_solved ? "bg-success text-success-foreground hover:bg-success/90" : ""}>
                         {i.is_solved ? "Résolu" : "Non résolu"}
