@@ -22,7 +22,7 @@ const UserManagement = ({ users, onUsersChange }: Props) => {
   const [formName, setFormName] = useState("");
   const [formEmail, setFormEmail] = useState("");
   const [formPassword, setFormPassword] = useState("");
-  const [formRole, setFormRole] = useState<string>("user");
+  const [formRole, setFormRole] = useState<string>("technicien");
   const [loading, setLoading] = useState(false);
 
   const openCreate = () => {
