@@ -27,7 +27,7 @@ router.get("/", authenticateToken, async (req, res) => {
 router.post("/", authenticateToken, (req, res, next) => {
   console.log("POST /api/interventions - user role:", req.user.role, "user id:", req.user.id);
   next();
-}, requireRole("admin", "user"), async (req, res) => {
+}, requireRole("admin", "technicien"), async (req, res) => {
   try {
     const { full_name, problem_description, location, actions_taken, date_of_intervention, is_solved } = req.body;
     if (!full_name || !problem_description || !location || !actions_taken || !date_of_intervention) {
