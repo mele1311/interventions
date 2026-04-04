@@ -57,7 +57,7 @@ router.post("/", authenticateToken, (req, res, next) => {
 });
 
 // PUT /api/interventions/:id — Admin uniquement
-router.put("/:id", authenticateToken, requireRole("admin", "user"), async (req, res) => {
+router.put("/:id", authenticateToken, requireRole("admin", "technicien"), async (req, res) => {
   try {
     // Users can only edit their own interventions
     if (req.user.role === "user") {
