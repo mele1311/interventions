@@ -1,5 +1,6 @@
-import { useState } from "react";
+import { useState, useEffect, useCallback } from "react";
 import { Intervention } from "@/lib/mock-data";
+import { fetchInterventions } from "@/lib/api";
 import Navbar from "@/components/Navbar";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -8,10 +9,20 @@ import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { FileText, CheckCircle, AlertCircle } from "lucide-react";
 
 const DirecteurDashboard = () => {
-  // TODO: Remplacez par un appel API pour charger toutes les interventions
-  const [interventions] = useState<Intervention[]>([]);
+  const [interventions, setInterventions] = useState<Intervention[]>([]);
   const [searchTerm, setSearchTerm] = useState("");
   const [filterSolved, setFilterSolved] = useState<string>("all");
+
+  const loadInterventions = useCallback(async () => {
+    try {
+      const data = await fetchInterventions();
+      setInterventions(data);
+    } catch (err) {
+      console.error("Erreur chargement interventions:", err);
+    }
+  }, []);
+
+  useEffect(() => { loadInterventions(); }, [loadInterventions]);
 
   const totalInterventions = interventions.length;
   const solved = interventions.filter((i) => i.is_solved).length;
