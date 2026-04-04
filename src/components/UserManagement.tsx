@@ -30,7 +30,7 @@ const UserManagement = ({ users, onUsersChange }: Props) => {
     setFormName("");
     setFormEmail("");
     setFormPassword("");
-    setFormRole("user");
+    setFormRole("technicien");
     setDialogOpen(true);
   };
 
