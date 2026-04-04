@@ -60,7 +60,7 @@ router.post("/", authenticateToken, (req, res, next) => {
 router.put("/:id", authenticateToken, requireRole("admin", "technicien"), async (req, res) => {
   try {
     // Users can only edit their own interventions
-    if (req.user.role === "user") {
+    if (req.user.role === "technicien") {
       const [rows] = await pool.execute("SELECT user_id FROM interventions WHERE id = ?", [req.params.id]);
       if (rows.length === 0) return res.status(404).json({ error: "Intervention non trouvée" });
       if (String(rows[0].user_id) !== String(req.user.id)) {

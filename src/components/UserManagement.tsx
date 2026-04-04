@@ -110,7 +110,7 @@ const UserManagement = ({ users, onUsersChange }: Props) => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="user">Utilisateur</SelectItem>
+                    <SelectItem value="technicien">Technicien</SelectItem>
                     <SelectItem value="directeur">Directeur</SelectItem>
                     <SelectItem value="admin">Administrateur</SelectItem>
                   </SelectContent>
