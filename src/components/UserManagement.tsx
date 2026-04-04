@@ -22,7 +22,7 @@ const UserManagement = ({ users, onUsersChange }: Props) => {
   const [formName, setFormName] = useState("");
   const [formEmail, setFormEmail] = useState("");
   const [formPassword, setFormPassword] = useState("");
-  const [formRole, setFormRole] = useState<string>("user");
+  const [formRole, setFormRole] = useState<string>("technicien");
   const [loading, setLoading] = useState(false);
 
   const openCreate = () => {
@@ -30,7 +30,7 @@ const UserManagement = ({ users, onUsersChange }: Props) => {
     setFormName("");
     setFormEmail("");
     setFormPassword("");
-    setFormRole("user");
+    setFormRole("technicien");
     setDialogOpen(true);
   };
 
@@ -110,7 +110,7 @@ const UserManagement = ({ users, onUsersChange }: Props) => {
                     <SelectValue />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="user">Utilisateur</SelectItem>
+                    <SelectItem value="technicien">Technicien</SelectItem>
                     <SelectItem value="directeur">Directeur</SelectItem>
                     <SelectItem value="admin">Administrateur</SelectItem>
                   </SelectContent>

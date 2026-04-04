@@ -27,7 +27,7 @@ router.get("/", authenticateToken, async (req, res) => {
 router.post("/", authenticateToken, (req, res, next) => {
   console.log("POST /api/interventions - user role:", req.user.role, "user id:", req.user.id);
   next();
-}, requireRole("admin", "user"), async (req, res) => {
+}, requireRole("admin", "technicien"), async (req, res) => {
   try {
     const { full_name, problem_description, location, actions_taken, date_of_intervention, is_solved } = req.body;
     if (!full_name || !problem_description || !location || !actions_taken || !date_of_intervention) {
@@ -57,10 +57,10 @@ router.post("/", authenticateToken, (req, res, next) => {
 });
 
 // PUT /api/interventions/:id — Admin uniquement
-router.put("/:id", authenticateToken, requireRole("admin", "user"), async (req, res) => {
+router.put("/:id", authenticateToken, requireRole("admin", "technicien"), async (req, res) => {
   try {
     // Users can only edit their own interventions
-    if (req.user.role === "user") {
+    if (req.user.role === "technicien") {
       const [rows] = await pool.execute("SELECT user_id FROM interventions WHERE id = ?", [req.params.id]);
       if (rows.length === 0) return res.status(404).json({ error: "Intervention non trouvée" });
       if (String(rows[0].user_id) !== String(req.user.id)) {
