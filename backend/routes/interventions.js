@@ -9,7 +9,7 @@ router.get("/", authenticateToken, async (req, res) => {
   try {
     let query, params;
     if (req.user.role === "admin" || req.user.role === "directeur") {
-      query = "SELECT * FROM interventions ORDER BY created_at DESC";
+      query = "SELECT i.*, u.full_name as user_full_name FROM interventions i LEFT JOIN users u ON i.user_id = u.id ORDER BY i.created_at DESC";
       params = [];
     } else {
       query = "SELECT * FROM interventions WHERE user_id = ? ORDER BY created_at DESC";

@@ -101,7 +101,7 @@ const InterventionsTable = ({ interventions, showUser, editable, onUpdated }: Pr
               <TableBody>
                 {interventions.map((i) => (
                   <TableRow key={i.id}>
-                    {showUser && <TableCell className="font-medium">{i.full_name}</TableCell>}
+                    {showUser && <TableCell className="font-medium">{(i as any).user_full_name || i.full_name}</TableCell>}
                     <TableCell className="max-w-[250px] truncate">{i.problem_description}</TableCell>
                     <TableCell>{i.location}</TableCell>
                     <TableCell>{new Date(i.date_of_intervention).toLocaleDateString("fr-FR")}</TableCell>
