@@ -1,12 +1,11 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useAuth } from "@/lib/auth-context";
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Label } from "@/components/ui/label";
 import { toast } from "sonner";
-import { Shield } from "lucide-react";
+import loginIllustration from "@/assets/login-illustration.png";
 
 const Login = () => {
   const [username, setUsername] = useState("");
@@ -38,19 +37,29 @@ const Login = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-background p-4">
-      <Card className="w-full max-w-md shadow-lg">
-        <CardHeader className="text-center space-y-2">
-          <div className="mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-primary/10">
-            <Shield className="h-7 w-7 text-primary" />
-          </div>
-          <CardTitle className="text-2xl font-bold">Interventions</CardTitle>
-          <CardDescription>Connectez-vous à votre compte</CardDescription>
-        </CardHeader>
-        <CardContent>
-          <form onSubmit={handleSubmit} className="space-y-4">
+    <div className="min-h-screen flex items-center justify-center bg-muted p-4">
+      <div className="w-full max-w-4xl bg-card rounded-2xl shadow-lg overflow-hidden flex flex-col md:flex-row">
+        {/* Left branding panel */}
+        <div className="md:w-1/2 bg-primary flex flex-col items-center justify-center p-10 text-primary-foreground">
+          <h1 className="text-3xl font-bold text-center">Direction Technique</h1>
+          <p className="text-lg mt-2 text-center opacity-90">Gestion des interventions</p>
+          <img
+            src={loginIllustration}
+            alt="Technicien effectuant une intervention"
+            width={220}
+            height={220}
+            className="mt-8"
+          />
+        </div>
+
+        {/* Right form panel */}
+        <div className="md:w-1/2 p-8 md:p-10 flex flex-col justify-center">
+          <h2 className="text-2xl font-bold text-foreground">Connexion</h2>
+          <p className="text-muted-foreground text-sm mt-1 mb-6">Connectez-vous à votre compte</p>
+
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="space-y-2">
-              <Label htmlFor="username">Nom d'utilisateur</Label>
+              <Label htmlFor="username" className="text-foreground">Nom d'utilisateur</Label>
               <Input
                 id="username"
                 type="text"
@@ -60,7 +69,7 @@ const Login = () => {
               />
             </div>
             <div className="space-y-2">
-              <Label htmlFor="password">Mot de passe</Label>
+              <Label htmlFor="password" className="text-foreground">Mot de passe</Label>
               <Input
                 id="password"
                 type="password"
@@ -73,8 +82,8 @@ const Login = () => {
               {loading ? "Connexion..." : "Se connecter"}
             </Button>
           </form>
-        </CardContent>
-      </Card>
+        </div>
+      </div>
     </div>
   );
 };
