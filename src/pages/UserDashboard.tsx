@@ -2,19 +2,25 @@ import { useState, useEffect, useCallback } from "react";
 import { Intervention } from "@/lib/mock-data";
 import { fetchInterventions, createIntervention } from "@/lib/api";
 import { useAuth } from "@/lib/auth-context";
-import Navbar from "@/components/Navbar";
+import Sidebar from "@/components/Sidebar";
+import DashboardLayout from "@/components/DashboardLayout";
 import InterventionForm from "@/components/InterventionForm";
 import InterventionsTable from "@/components/InterventionsTable";
 import { toast } from "sonner";
 import { Button } from "@/components/ui/button";
 import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { Plus } from "lucide-react";
+import { Plus, LayoutDashboard, FileText } from "lucide-react";
+
+const sections = [
+  { id: "dashboard", label: "Mes Interventions", icon: LayoutDashboard },
+];
 
 const UserDashboard = () => {
   const { user } = useAuth();
   const [interventions, setInterventions] = useState<Intervention[]>([]);
   const [loading, setLoading] = useState(true);
   const [showForm, setShowForm] = useState(false);
+  const [activeSection, setActiveSection] = useState("dashboard");
 
   const loadInterventions = useCallback(async () => {
     try {
@@ -43,19 +49,16 @@ const UserDashboard = () => {
   };
 
   return (
-    <div className="min-h-screen bg-background">
-      <Navbar />
-      <main className="container py-8 space-y-8">
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-foreground">Mon Tableau de Bord</h1>
-            <p className="text-muted-foreground">Soumettez et suivez vos interventions</p>
-          </div>
+    <div className="flex">
+      <Sidebar activeSection={activeSection} onSectionChange={setActiveSection} sections={sections} />
+      <DashboardLayout title="Mon Tableau de Bord" subtitle="Soumettez et suivez vos interventions">
+        <div className="flex items-center justify-end">
           <Button onClick={() => setShowForm(true)}>
             <Plus className="h-4 w-4 mr-1" />
             Nouvelle Intervention
           </Button>
         </div>
+
         <div>
           <h2 className="text-lg font-semibold text-foreground mb-4">Mes Interventions</h2>
           {loading ? (
@@ -73,7 +76,7 @@ const UserDashboard = () => {
             <InterventionForm onSubmit={handleAdd} />
           </DialogContent>
         </Dialog>
-      </main>
+      </DashboardLayout>
     </div>
   );
 };
